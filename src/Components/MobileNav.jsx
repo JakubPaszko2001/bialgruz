@@ -26,14 +26,14 @@ const MobileNav = () => {
 
   return (
     <nav className="xl:hidden">
-      <div className="fixed top-0 left-0 w-screen h-16 bg-black border-b-2 border-[#ffdf7c] z-40">
+      <div className="fixed top-0 left-0 w-screen h-16 bg-black border-b-2 border-yellow-500 z-40">
         <img className="w-1/2 max-w-[280px] absolute left-[20px] top-1/2 transform -translate-y-1/2" loading="eager" src={Logo} alt="Abyss Logo" />
         <button
           aria-label="Open Menu"
           onClick={handleMenuOpen}
           className="fixed top-5 right-5"
         >
-          <IoMdMenu className="w-[25px] h-[25px] text-[#ffdf7c]" />
+          <IoMdMenu className="w-[25px] h-[25px] text-yellow-500" />
         </button>
       </div>
       <aside
@@ -46,7 +46,7 @@ const MobileNav = () => {
           onClick={handleMenuClose}
           className="absolute top-10 right-10"
         >
-          <IoMdClose className="w-[50px] h-[50px] text-[#ffdf7c]" />
+          <IoMdClose className="w-[50px] h-[50px] text-yellow-500" />
         </button>
         <NavUl menuOpen={menuOpen} handleClose={handleMenuClose} />
       </aside>

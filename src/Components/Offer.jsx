@@ -5,10 +5,14 @@ import wywoz from '../Assets/wywoz.webp';
 
 const Offer = () => {
   return (
-    <div className='bg-[#111111] px-[20px] w-full'>
-      <h1 className='text-center text-white text-3xl font-bold pt-8'>Nasza oferta</h1>
+    <div className='relative bg-[#111111] px-[20px] w-full overflow-hidden'>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 max-w-[1280px] mx-auto">
+      {/* ŻÓŁTE ŚWIATŁO Z LEWEJ STRONY */}
+      <div className="absolute left-1/2 top-0 transform -translate-x-1/2 lg:left-0 lg:-top-1/2 w-[1500px] h-[1500px] bg-yellow-400 opacity-5 blur-[200px] rounded-full pointer-events-none z-0" />
+
+      <h1 className='text-center text-white text-3xl font-bold pt-8 relative z-10'>Nasza oferta</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 max-w-[1280px] mx-auto relative z-10">
         {[{
           img: BigBag,
           title: 'BIG-BAG 1m³',
@@ -79,7 +83,7 @@ const Offer = () => {
         ))}
       </div>
 
-      <p className='py-8 text-white text-xl text-center'>
+      <p className='py-8 text-white text-xl text-center relative z-10'>
         Trasy poza miasto Białystok wyceniane są indywidualnie, zapraszamy do kontaktu telefonicznego lub e-mailowego.
       </p>
     </div>

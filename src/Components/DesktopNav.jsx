@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Logo from "../Assets/Logo_Bialgruz.webp";
 const DesktopNav = () => {
   const menuOpen = true;
   useEffect(() => {
@@ -15,12 +16,21 @@ const DesktopNav = () => {
     });
   });
   return (
-    <nav className="!hidden fixed top-0 left-1/2 -translate-x-1/2 xl:block z-50">
-      <div className="navbar flex flex-col xl:flex-row justify-around items-center w-[50vw] h-[10vh] px-10 bg-black/10 rounded-br-xl rounded-bl-xl border-b-1 border-gray-500 backdrop-blur-md transition-transform duration-300 !px-4 text-white text-lg">
-        <a href="#game-elements" className="cursor-pointer">Game Elements</a>
-        <a href="#trailer" className="cursor-pointer">Trailer</a>
-        <a href="#how-to-play" className="cursor-pointer">How to play</a>
-        <a href="#gallery" className="cursor-pointer">Gallery</a>
+ <nav className="desktop-navbar navbar hidden xl:flex fixed top-0 left-0 w-full z-50 border-b border-yellow-500 bg-black transition-transform duration-300">
+      <div className="flex items-center justify-between w-full max-w-[1400px] mx-auto px-8 h-[72px]">
+        
+        {/* LOGO */}
+        <div className="flex items-center">
+          <img src={Logo} alt="Bialgruz Logo" className="max-w-[260px]" />
+        </div>
+
+        {/* NAVIGATION */}
+        <ul className="flex space-x-8 text-yellow-400 font-semibold text-sm uppercase">
+          <li><a href="#home" className="hover:text-white transition">Strona główna</a></li>
+          <li><a href="#oferta" className="hover:text-white transition">Oferta</a></li>
+          <li><a href="#zamowienie" className="hover:text-white transition">Zamówienie</a></li>
+          <li><a href="#kontakt" className="hover:text-white transition">Kontakt</a></li>
+        </ul>
       </div>
     </nav>
   );
