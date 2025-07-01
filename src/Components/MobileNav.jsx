@@ -27,7 +27,7 @@ const MobileNav = () => {
   return (
     <nav className="xl:hidden">
       <div className="fixed top-0 left-0 w-screen h-16 bg-black border-b-2 border-[#ffdf7c] z-40">
-        <img className="w-1/2 absolute left-[20px] top-1/2 transform -translate-y-1/2" loading="eager" src={Logo} alt="Abyss Logo" />
+        <img className="w-1/2 max-w-[280px] absolute left-[20px] top-1/2 transform -translate-y-1/2" loading="eager" src={Logo} alt="Abyss Logo" />
         <button
           aria-label="Open Menu"
           onClick={handleMenuOpen}
