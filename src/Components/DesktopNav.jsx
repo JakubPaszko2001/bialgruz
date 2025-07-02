@@ -21,7 +21,7 @@ const DesktopNav = () => {
         
         {/* LOGO */}
         <div className="flex items-center">
-          <img src={Logo} alt="Bialgruz Logo" className="max-w-[260px]" />
+          <img src={Logo} alt="Bialgruz Logo" className="max-w-[260px] xl:ml-[28px]" />
         </div>
 
         {/* NAVIGATION */}
