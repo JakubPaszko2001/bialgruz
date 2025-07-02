@@ -5,7 +5,7 @@ import wywoz from '../Assets/wywoz.webp';
 
 const Offer = () => {
   return (
-    <div className='relative bg-[#111111] px-[20px] w-full overflow-hidden'>
+    <div id="offer" className='relative bg-[#111111] px-[20px] w-full overflow-hidden'>
 
       {/* ŻÓŁTE ŚWIATŁO Z LEWEJ STRONY */}
       <div className="absolute left-1/2 top-0 transform -translate-x-1/2 lg:left-0 lg:-top-1/2 w-[1500px] h-[1500px] bg-yellow-400 opacity-5 blur-[200px] rounded-full pointer-events-none z-0" />

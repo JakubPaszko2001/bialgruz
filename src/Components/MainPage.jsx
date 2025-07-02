@@ -2,7 +2,7 @@ import React from 'react'
 
 const MainPage = () => {
   return (
-    <div className='relative w-full min-h-screen max-h-screen bg-black flex flex-col items-center justify-center px-[20px] overflow-hidden'>
+    <div id='main' className='relative w-full min-h-screen max-h-screen bg-black flex flex-col items-center justify-center px-[20px] overflow-hidden'>
 
       {/* ŚWIATŁO Z BLUREM */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

@@ -26,10 +26,10 @@ const DesktopNav = () => {
 
         {/* NAVIGATION */}
         <ul className="flex space-x-8 text-yellow-400 font-semibold text-sm uppercase">
-          <li><a href="#home" className="hover:text-white transition">Strona główna</a></li>
-          <li><a href="#oferta" className="hover:text-white transition">Oferta</a></li>
-          <li><a href="#zamowienie" className="hover:text-white transition">Zamówienie</a></li>
-          <li><a href="#kontakt" className="hover:text-white transition">Kontakt</a></li>
+          <li><a href="#main" className="hover:text-white transition">Strona główna</a></li>
+          <li><a href="#offer" className="hover:text-white transition">Oferta</a></li>
+          <li><a href="#order" className="hover:text-white transition">Zamówienie</a></li>
+          <li><a href="#contact" className="hover:text-white transition">Kontakt</a></li>
         </ul>
       </div>
     </nav>

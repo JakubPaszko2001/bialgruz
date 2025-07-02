@@ -1,9 +1,9 @@
 const NavUl = ({ menuOpen, handleClose }) => {
   const liMenu = [
-    { name: "Strona główna", span: true, ref: "game-elements" },
-    { name: "Oferta", span: true, ref: "trailer" },
-    { name: "Zamówienia", span: true, ref: "how-to-play" },
-    { name: "Kontakt", span: false, ref: "gallery" },
+    { name: "Strona główna", span: true, ref: "main" },
+    { name: "Oferta", span: true, ref: "offer" },
+    { name: "Zamówienia", span: true, ref: "order" },
+    { name: "Kontakt", span: false, ref: "contact" },
   ];
 
   return (
