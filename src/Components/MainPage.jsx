@@ -17,10 +17,12 @@ const MainPage = () => {
         Oferujemy wynajem Big Bagów (1 m³) oraz kontenerów (7 m³) na czysty gruz i odpady zmieszane. Obsługujemy powiat białostocki i okolice. Profesjonalna obsługa, najniższe ceny!
       </p>
 
-      <button className="relative z-10 px-12 py-4 font-semibold text-black bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-xl shadow-lg hover:brightness-105 transition duration-300 drop-shadow-[0px_1px_5px_rgba(255,255,0,0.4)]">
-        ZAMÓW TERAZ
-      </button>
-
+      <a href="#order">
+        <button className="relative z-10 px-12 py-4 font-semibold text-black bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-xl shadow-lg hover:brightness-105 transition duration-300 drop-shadow-[0px_1px_5px_rgba(255,255,0,0.4)]">
+          ZAMÓW TERAZ
+        </button>
+      </a>
+      
       <p className='text-white text-center mt-8 z-10'>lub zadzwoń</p>
 
       <div className="mt-8 text-center text-5xl md:text-5xl font-extrabold uppercase text-gray-400 tracking-wide z-10">

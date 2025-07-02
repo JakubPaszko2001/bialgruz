@@ -75,7 +75,11 @@ const Offer = () => {
                 </li>
               ))}
             </ul>
-            <button href="#order" className="mt-8 px-8 py-3 font-bold text-yellow-400 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 shadow-[0_0_12px_rgba(255,255,0,0.2)]">{item.button}</button>
+            <a href="#order">
+            <button href="#order" className="mt-8 px-8 py-3 font-bold text-yellow-400 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 shadow-[0_0_12px_rgba(255,255,0,0.2)]">
+              {item.button}
+            </button>
+            </a>
             {index !== 2 && (
               <p className='mt-8 text-center text-white text-xs'>UWAGA! Nie przyjmujemy odpadów takich jak: azbest, papa, opony, wełna mineralna, eternit, świetlówki, części samochodowe. Jeżeli masz takie odpady, zadzwoń, a my się tym zajmiemy!</p>
             )}
