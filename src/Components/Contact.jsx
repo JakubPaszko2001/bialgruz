@@ -13,7 +13,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaPhoneAlt className="text-white text-lg mt-1" />
             <div>
-              <h3 className="font-bold text-lg">Telefon</h3>
+              <h2 className="font-bold text-lg">Telefon</h2>
               <p>+ 48 799 091 000</p>
               <p>+ 48 799 092 000</p>
               <p>+ 48 799 093 000</p>
@@ -27,7 +27,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaEnvelope className="text-white text-lg mt-1" />
             <div>
-              <h3 className="font-bold text-lg">Email</h3>
+              <h2 className="font-bold text-lg">Email</h2>
               <p>biuro@bialgruz.pl</p>
               <p className="text-sm text-gray-300">Odpowiadamy w ciągu 12h</p>
             </div>
@@ -37,7 +37,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaMapMarkerAlt className="text-white text-lg mt-1" />
             <div>
-              <h3 className="font-bold text-lg">Adres</h3>
+              <h2 className="font-bold text-lg">Adres</h2>
               <p>Porosły-Kolonia 12M</p>
               <p>16-070 Choroszcz</p>
             </div>
@@ -52,6 +52,7 @@ const Contact = () => {
             height="350"
             allowFullScreen=""
             loading="lazy"
+            title="Mapa lokalizacji firmy Bialgruz"
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
