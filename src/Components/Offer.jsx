@@ -53,7 +53,7 @@ const Offer = () => {
         }].map((item, index) => (
             <div
               key={index}
-              className='bg-[#1E1D1C] flex flex-col items-center p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in max-w-[400px] w-full mx-auto md:max-w-none'
+              className='bg-[#1E1D1C] flex flex-col items-center p-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(255,255,0,0.15)] hover:brightness-105 max-w-[400px] w-full mx-auto md:max-w-none'
             >
             <div className='w-full rounded-full overflow-hidden outline outline-[3px] outline-yellow-600/55 outline-offset-[13px] shadow-[0_0_0_16px_rgba(255,255,0,0.08)]'>
               <img src={item.img} alt={item.title} loading="lazy" className='w-full h-auto' />

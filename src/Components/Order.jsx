@@ -87,7 +87,7 @@ const Order = () => {
           </div>
 
           <div className="md:col-span-2 text-center mt-4">
-            <button type="submit" className="px-12 py-4 font-semibold text-black bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-xl shadow-lg hover:brightness-105 transition duration-300">
+            <button className="relative z-10 px-12 py-4 font-semibold text-black bg-gradient-to-b from-yellow-300 to-yellow-500 rounded-xl shadow-lg transition duration-300 transform hover:shadow-[0_8px_20px_rgba(255,255,0,0.4)] hover:brightness-110">
               ZAMÓW TERAZ
             </button>
           </div>
