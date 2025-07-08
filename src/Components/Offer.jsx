@@ -59,7 +59,7 @@ const Offer = () => {
               <img src={item.img} alt={item.title} loading="lazy" className='w-full h-auto' />
             </div>
             <h2 className='mt-12 text-[#FFD700] font-bold text-2xl text-center'>{item.title}</h2>
-            {item.clean && <p className='mt-8 text-white'><span className='font-bold text-xs'>ODPAD CZYSTY:</span> {item.clean}</p>}
+            {item.clean && <p className='mt-8 text-white'><span className='font-bold text-xs'>GRUZ CZYSTY:</span> {item.clean}</p>}
             {item.mixed && <p className='text-white'><span className='font-bold text-xs'>ODPAD ZMIESZANY:</span> {item.mixed}</p>}
             {(item.clean || item.mixed) && (
               <p className='text-white mt-8 text-sm'>(ceny zawierają wliczony VAT 8%)</p>

@@ -13,7 +13,7 @@ const MainPage = () => {
         WYWÓZ <br /> GRUZU I ODPADÓW ZMIESZANYCH
       </h1>
 
-      <p style={{ willChange: 'transform' }} fetchpriority="high" className='text-xl text-gray-200 text-center font-light py-8 max-w-md mx-auto z-10'>
+      <p style={{ willChange: 'transform' }} fetchPriority="high" className='text-xl text-gray-200 text-center font-light py-8 max-w-md mx-auto z-10'>
         Oferujemy wynajem Big Bagów (1 m³) oraz kontenerów (7 m³) na czysty gruz i odpady zmieszane. Obsługujemy powiat białostocki i okolice. Profesjonalna obsługa, najniższe ceny!
       </p>
 
