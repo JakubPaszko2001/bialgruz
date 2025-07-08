@@ -31,8 +31,8 @@ const Order = () => {
       <div className="bg-[#1E1D1C] text-white max-w-4xl mx-auto p-6 rounded-xl shadow-[0_0_20px_rgba(255,255,0,0.1)]">
         <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Rodzaj usługi:</label>
-            <select name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
+            <label htmlFor="rodzajuslugi" className="text-yellow-400">Rodzaj usługi:</label>
+            <select id="rodzajuslugi" name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
               <option className="text-black">BIG-BAG 1m³</option>
               <option className="text-black">Kontener 7m³</option>
             </select>
