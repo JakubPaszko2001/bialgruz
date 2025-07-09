@@ -75,61 +75,59 @@ const Order = () => {
         >
           {/* pola formularza (bez zmian) */}
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Rodzaj usługi:</label>
-            <select name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
+            <label htmlFor="rodzajuslugi" className="text-yellow-400">Rodzaj usługi:</label>
+            <select id="rodzajuslugi" name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
               <option className="text-black">BIG-BAG 1m³</option>
               <option className="text-black">Kontener 7m³</option>
             </select>
           </div>
-
+            
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Rodzaj odpadów:</label>
-            <select name="rodzajodpadu" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
+            <label htmlFor="rodzajodpadu" className="text-yellow-400">Rodzaj odpadów:</label>
+            <select id="rodzajodpadu" name="rodzajodpadu" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
               <option className="text-black">Czysty gruz</option>
               <option className="text-black">Zmieszane</option>
             </select>
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Imię:</label>
-            <input name="name" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="name" className="text-yellow-400">Imię:</label>
+            <input id="name" name="name" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Nazwisko:</label>
-            <input name="forname" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="forname" className="text-yellow-400">Nazwisko:</label>
+            <input id="forname" name="forname" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Adres dostawy:</label>
-            <input name="address" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="address" className="text-yellow-400">Adres dostawy:</label>
+            <input id="address" name="address" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Kod pocztowy:</label>
-            <input name="postcode" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="postcode" className="text-yellow-400">Kod pocztowy:</label>
+            <input id="postcode" name="postcode" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Miejscowość:</label>
-            <input name="city" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="city" className="text-yellow-400">Miejscowość:</label>
+            <input id="city" name="city" type="text" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Email:</label>
-            <input name="email" type="email" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="email" className="text-yellow-400">Email:</label>
+            <input id="email" name="email" type="email" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
+            
           <div>
-            <label className="text-yellow-400">Telefon:</label>
-            <input name="phone" type="tel" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
+            <label htmlFor="phone" className="text-yellow-400">Telefon:</label>
+            <input id="phone" name="phone" type="tel" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent" />
           </div>
-
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Uwagi:</label>
-            <textarea name="message" rows="4" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent resize-none"></textarea>
+            <label htmlFor="message" className="text-yellow-400">Uwagi:</label>
+            <textarea id="message" name="message" rows="4" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent resize-none"></textarea>
           </div>
-
           <div className="md:col-span-2 text-center mt-4">
             <button
               type="submit"
