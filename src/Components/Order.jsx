@@ -141,8 +141,9 @@ const Order = () => {
 
   const renderInput = (name, label, type = 'text') => (
     <div>
-      <label className="text-yellow-400">{label}:</label>
+      <label htmlFor={name} className="text-yellow-400">{label}:</label>
       <input
+        id={name}
         name={name}
         type={type}
         className={`w-full p-3 border rounded-md bg-transparent ${
@@ -158,16 +159,17 @@ const Order = () => {
       <h1 className="text-3xl font-bold text-white text-center py-12">Złóż zamówienie</h1>
       <div className="bg-[#1E1D1C] text-white max-w-4xl mx-auto p-6 rounded-xl shadow">
         <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-5">
-         <div className="md:col-span-2">
-            <label className="text-yellow-400">Rodzaj usługi:</label>
-            <select name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
+          <div className="md:col-span-2">
+            <label htmlFor="rodzajuslugi" className="text-yellow-400">Rodzaj usługi:</label>
+            <select id="rodzajuslugi" name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
               <option className="text-black">BIG-BAG 1m³</option>
               <option className="text-black">Kontener 7m³</option>
             </select>
           </div>
+
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Rodzaj odpadów:</label>
-            <select name="rodzajodpadu" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
+            <label htmlFor="rodzajodpadu" className="text-yellow-400">Rodzaj odpadów:</label>
+            <select id="rodzajodpadu" name="rodzajodpadu" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
               <option className="text-black">Czysty gruz</option>
               <option className="text-black">Zmieszane</option>
             </select>
@@ -182,8 +184,8 @@ const Order = () => {
           {renderInput('phone', 'Telefon', 'tel')}
 
           <div className="md:col-span-2">
-            <label className="text-yellow-400">Uwagi:</label>
-            <textarea name="message" rows="3" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent resize-none" />
+            <label htmlFor="message" className="text-yellow-400">Uwagi:</label>
+            <textarea id="message" name="message" rows="3" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent resize-none" />
           </div>
 
           <div className="md:col-span-2">
