@@ -28,6 +28,7 @@ const MainPage = () => {
         <h2>799 091 000</h2>
         <h2>799 092 000</h2>
         <h2>799 093 000</h2>
+        <h2 className="text-sm">BDO: 000672099</h2>
       </div>
     </div>
   )
