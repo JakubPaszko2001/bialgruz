@@ -6,17 +6,18 @@ const AdminPanel = () => {
   const [orders, setOrders] = useState([]);
   const [editOrder, setEditOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState(null); // ⬅️ stan modala usuwania
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const allFields = [
-    'name', 'forname', 'phone', 'email', 'rodzajuslugi',
-    'rodzajodpadu', 'address', 'postcode', 'city', 'message', 'Status'
+    'name', 'forname', 'phone', 'email', 'nip',
+    'rodzajuslugi', 'rodzajodpadu', 'address', 'postcode', 'city',
+    'message', 'platnosc', 'szacowany', 'Status'
   ];
 
   const fetchOrders = async () => {
     const { data, error } = await supabase.from('Zamówienia').select('*');
-    if (error) console.error('Błąd pobierania danych:', error.message);
-    else setOrders(data);
+    if (!error) setOrders(data);
+    else console.error('Błąd pobierania danych:', error.message);
   };
 
   useEffect(() => {
@@ -55,38 +56,25 @@ const AdminPanel = () => {
     }
   };
 
-  const confirmDelete = (id) => setDeleteTarget(id); // ⬅️ otwórz modal
+  const confirmDelete = (id) => setDeleteTarget(id);
 
   const handleDelete = async () => {
     const { error } = await supabase.from('Zamówienia').delete().eq('id', deleteTarget);
-    setDeleteTarget(null); // zamknij modal
-
+    setDeleteTarget(null);
     if (!error) fetchOrders();
     else console.error('Błąd usuwania:', error.message);
   };
 
   const getStatusStyles = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'nowe':
-        return {
-          border: 'border-green-500',
-          icon: 'text-green-400 hover:text-green-300',
-        };
-      case 'w trakcie':
-        return {
-          border: 'border-yellow-500',
-          icon: 'text-yellow-400 hover:text-yellow-300',
-        };
-      case 'zakończone':
-        return {
-          border: 'border-red-500',
-          icon: 'text-red-400 hover:text-red-300',
-        };
+    switch ((status || '').toLowerCase()) {
+      case 'do realizacji':
+        return { border: 'border-green-500', icon: 'text-green-400 hover:text-green-300' };
+      case 'podstawiony':
+        return { border: 'border-yellow-500', icon: 'text-yellow-400 hover:text-yellow-300' };
+      case 'do odbioru':
+        return { border: 'border-red-500', icon: 'text-red-400 hover:text-red-300' };
       default:
-        return {
-          border: 'border-gray-500',
-          icon: 'text-white hover:text-gray-300',
-        };
+        return { border: 'border-gray-500', icon: 'text-white hover:text-gray-300' };
     }
   };
 
@@ -100,7 +88,6 @@ const AdminPanel = () => {
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {orders.map((order) => {
             const { border, icon } = getStatusStyles(order.Status);
-
             return (
               <div
                 key={order.id}
@@ -109,25 +96,22 @@ const AdminPanel = () => {
                 <div className="space-y-2 text-sm">
                   {allFields.map((field) => (
                     <div key={field}>
-                      <div className="text-yellow-400 font-medium capitalize">{field}</div>
+                      <div className="text-yellow-400 font-medium capitalize">
+                        {field === 'szacowany'
+                          ? 'Szacowany koszt dostawy'
+                          : field === 'platnosc'
+                          ? 'Płatność'
+                          : field}
+                      </div>
                       <div>{order[field]}</div>
                     </div>
                   ))}
                 </div>
-
                 <div className="absolute bottom-3 right-3 flex gap-3">
-                  <button
-                    onClick={() => handleEdit(order)}
-                    title="Edytuj"
-                    className={icon}
-                  >
+                  <button onClick={() => handleEdit(order)} title="Edytuj" className={icon}>
                     <FaEdit className="text-lg" />
                   </button>
-                  <button
-                    onClick={() => confirmDelete(order.id)}
-                    title="Usuń"
-                    className="text-red-400 hover:text-red-300"
-                  >
+                  <button onClick={() => confirmDelete(order.id)} title="Usuń" className="text-red-400 hover:text-red-300">
                     <FaTrash className="text-lg" />
                   </button>
                 </div>
@@ -146,19 +130,34 @@ const AdminPanel = () => {
               {allFields.map((field) => (
                 <div key={field}>
                   <label className="block text-sm font-medium mb-1 capitalize text-yellow-400">
-                    {field}
+                    {field === 'szacowany'
+                      ? 'Szacowany koszt dostawy'
+                      : field === 'platnosc'
+                      ? 'Płatność'
+                      : field}
                   </label>
                   {field === 'Status' ? (
                     <select
-                      value={editOrder.Status || 'Nowe'}
+                      value={editOrder.Status || 'Do realizacji'}
                       onChange={(e) =>
                         setEditOrder({ ...editOrder, Status: e.target.value })
                       }
                       className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     >
-                      <option value="Nowe">Nowe</option>
-                      <option value="W trakcie">W trakcie</option>
-                      <option value="Zakończone">Zakończone</option>
+                      <option value="Do realizacji">Do realizacji</option>
+                      <option value="Podstawiony">Podstawiony</option>
+                      <option value="Do odbioru">Do odbioru</option>
+                    </select>
+                  ) : field === 'platnosc' ? (
+                    <select
+                      value={editOrder.platnosc || ''}
+                      onChange={(e) =>
+                        setEditOrder({ ...editOrder, platnosc: e.target.value })
+                      }
+                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
+                      <option value="karta">Karta</option>
+                      <option value="gotówka">Gotówka</option>
                     </select>
                   ) : (
                     <input
@@ -191,7 +190,7 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* MODAL POTWIERDZENIA USUNIĘCIA */}
+      {/* MODAL USUWANIA */}
       {deleteTarget && (
         <div className="fixed inset-0 z-[9999] bg-black bg-opacity-70 flex items-center justify-center">
           <div className="bg-[#2c2c2c] text-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center border border-red-500">

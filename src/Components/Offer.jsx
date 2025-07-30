@@ -44,12 +44,12 @@ const Offer = () => {
           mixed: null,
           description: 'Kompleksowa usługa wywozu i utylizacji odpadów budowlanych. Dbamy o środowisko i przestrzegamy wszystkich norm.',
           features: [
-            'Wywóz azbestu, papy, opon, wełny mineralnej, eternitu, świetlówek, części samochodowych itp.',
+            'Wywóz papy, opon, wełny mineralnej, eternitu, świetlówek, części samochodowych itp.',
             'Ekologiczna utylizacja',
             'Konkurencyjne ceny',
             'Terminowa realizacja'
           ],
-          button: 'ZAMÓW KONTENER'
+          button: 'ZADZWOŃ'
         }].map((item, index) => (
             <div
               key={index}
@@ -75,12 +75,20 @@ const Offer = () => {
                 </li>
               ))}
             </ul>
-            <a href="#order">
-            <button href="#order" className="mt-8 px-8 py-3 font-bold text-yellow-400 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 shadow-[0_0_12px_rgba(255,255,0,0.2)]">
-              {item.button}
-            </button>
-            </a>
-            {index !== 2 && (
+              {item.button === 'ZADZWOŃ' ? (
+                <a href="tel:799091000">
+                  <button className="mt-8 px-8 py-3 font-bold text-yellow-400 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 shadow-[0_0_12px_rgba(255,255,0,0.2)]">
+                    {item.button}
+                  </button>
+                </a>
+              ) : (
+                <a href="#order">
+                  <button className="mt-8 px-8 py-3 font-bold text-yellow-400 border-2 border-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition duration-300 shadow-[0_0_12px_rgba(255,255,0,0.2)]">
+                    {item.button}
+                  </button>
+                </a>
+              )}
+              {index !== 2 && (
               <p className='mt-8 text-center text-white text-xs'>UWAGA! Nie przyjmujemy odpadów takich jak: azbest, papa, opony, wełna mineralna, eternit, świetlówki, części samochodowe. Jeżeli masz takie odpady, zadzwoń, a my się tym zajmiemy!</p>
             )}
           </div>
@@ -88,7 +96,7 @@ const Offer = () => {
       </div>
 
       <p className='py-8 text-white text-xl text-center relative z-10'>
-        Trasy poza miasto Białystok wyceniane są indywidualnie, zapraszamy do kontaktu telefonicznego lub e-mailowego.
+        Trasy poza miasto Białystok wyceniane są indywidualnie, zapraszamy do kontaktu telefonicznego lub e-mailowego. Transport na terenie Białegostoku za darmo !
       </p>
     </div>
   )
