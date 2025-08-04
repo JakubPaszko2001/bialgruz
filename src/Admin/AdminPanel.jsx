@@ -7,6 +7,7 @@ const AdminPanel = () => {
   const [editOrder, setEditOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [viewArchive, setViewArchive] = useState(false); // <== Nowe
 
   const allFields = [
     'name', 'forname', 'phone', 'email', 'nip',
@@ -73,20 +74,36 @@ const AdminPanel = () => {
         return { border: 'border-yellow-500', icon: 'text-yellow-400 hover:text-yellow-300' };
       case 'do odbioru':
         return { border: 'border-red-500', icon: 'text-red-400 hover:text-red-300' };
+      case 'zrealizowane':
+        return { border: 'border-blue-500', icon: 'text-blue-400 hover:text-blue-300' };
       default:
         return { border: 'border-gray-500', icon: 'text-white hover:text-gray-300' };
     }
   };
 
+  const filteredOrders = orders.filter(order =>
+    viewArchive ? order.Status?.toLowerCase() === 'zrealizowane' : order.Status?.toLowerCase() !== 'zrealizowane'
+  );
+
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white px-4 py-8 font-Main">
-      <h1 className="text-3xl font-bold mb-6 text-yellow-500 text-center">Zamówienia</h1>
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <h1 className="text-3xl font-bold text-yellow-500">Zamówienia</h1>
+        <button
+          className={`px-4 py-2 rounded font-semibold text-sm transition ${
+            viewArchive ? 'bg-yellow-600 text-black' : 'bg-[#2c2c2c] border border-yellow-500 text-yellow-400'
+          }`}
+          onClick={() => setViewArchive(!viewArchive)}
+        >
+          {viewArchive ? 'Pokaż aktywne' : 'Archiwum'}
+        </button>
+      </div>
 
-      {orders.length === 0 ? (
-        <p className="text-center">Brak zamówień.</p>
+      {filteredOrders.length === 0 ? (
+        <p className="text-center">Brak zamówień do wyświetlenia.</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {orders.map((order) => {
+          {filteredOrders.map((order) => {
             const { border, icon } = getStatusStyles(order.Status);
             return (
               <div
@@ -147,6 +164,7 @@ const AdminPanel = () => {
                       <option value="Do realizacji">Do realizacji</option>
                       <option value="Podstawiony">Podstawiony</option>
                       <option value="Do odbioru">Do odbioru</option>
+                      <option value="Zrealizowane">Zrealizowane</option>
                     </select>
                   ) : field === 'platnosc' ? (
                     <select

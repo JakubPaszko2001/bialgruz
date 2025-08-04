@@ -10,6 +10,7 @@ import Offer from './Components/Offer';
 import Order from './Components/Order';
 import Contact from './Components/Contact';
 import Footer from './Components/Footer';
+import Sponsor from './Components/Sponsor';
 
 import AdminLogin from './Admin/AdminLogin';
 import AdminPanel from './Admin/AdminPanel';
@@ -28,6 +29,7 @@ function App() {
               <MainPage />
               <Offer />
               <Order />
+              <Sponsor />
               <Contact />
               <Footer />
             </div>
