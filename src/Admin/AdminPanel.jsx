@@ -12,7 +12,7 @@ const AdminPanel = () => {
   const allFields = [
     'name', 'forname', 'phone', 'email', 'nip',
     'rodzajuslugi', 'rodzajodpadu', 'address', 'postcode', 'city',
-    'message', 'platnosc', 'szacowany', 'dataDostawy', 'numerKontenera', 'numerZlecenia', 'Status'
+    'message', 'platnosc', 'szacowany', 'dataDostawy', 'numerKontenera', 'numerZlecenia', 'Status', 'dataUtworzenia'
   ];
 
   const fetchOrders = async () => {
@@ -110,7 +110,9 @@ const AdminPanel = () => {
             <tr key={order.id} className="bg-[#1f1f1f] border-t border-yellow-300">
               {allFields.map(field => (
                 <td key={field} className="px-2 py-1 border border-yellow-400 whitespace-nowrap">
-                  {order[field] || ''}
+                  {field === 'dataUtworzenia' && order[field]
+                    ? new Date(order[field]).toLocaleDateString('pl-PL') // formatowanie daty
+                    : order[field] || ''}
                 </td>
               ))}
               <td className="px-2 py-1 border border-yellow-400 whitespace-nowrap text-center">
