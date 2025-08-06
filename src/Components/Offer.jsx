@@ -42,12 +42,16 @@ const Offer = () => {
           title: 'Wywóz odpadów',
           clean: null,
           mixed: null,
-          description: 'Kompleksowa usługa wywozu i utylizacji odpadów budowlanych. Dbamy o środowisko i przestrzegamy wszystkich norm.',
+          // description: 'Świadczymy profesjonalne usługi załadunku odpadów oraz opróżniania różnego typu przestrzeni. Sprzątamy, pakujemy, ładujemy - Ty masz z głowy. Dbamy o środowisko i przestrzegamy wszystkich norm utylizacji.',
           features: [
-            'Wywóz papy, opon, wełny mineralnej, eternitu, świetlówek, części samochodowych itp.',
-            'Ekologiczna utylizacja',
-            'Konkurencyjne ceny',
-            'Terminowa realizacja'
+            'Załadunek odpadów do kontenera lub Big Baga',
+            'Opróżnianie mieszkań, piwnic, strychów, działek i komórek lokatorskich',
+            'Sprzątanie posesji oraz terenów ROD',
+            'Kompleksowe sprzątanie po remoncie i wykończeniówce',
+            'Utylizacja mebli, sprzętu AGD, złomu, gabarytów',
+            'Ekspresowe terminy i atrakcyjne ceny',
+            'Działamy cicho, czysto i dyskretnie - również dla spadków i lokali do sprzedaży',
+            'Obsługujemy osoby prywatne, wspólnoty, deweloperów i firmy',
           ],
           button: 'ZADZWOŃ'
         }].map((item, index) => (

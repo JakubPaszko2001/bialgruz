@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { supabase } from './Supabase';
-import Blik from "../Assets/blik.png";
+import Blik from "../Assets/blik.webp";
 const Order = () => {
   const form = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +18,28 @@ const Order = () => {
     'rodzajuslugi', 'rodzajodpadu', 'name', 'forname',
     'address', 'postcode', 'city', 'email', 'phone', 'deliveryDate'
   ];
+
+  const generateOrderNumber = async () => {
+    const { data, error } = await supabase
+      .from('Zamówienia')
+      .select('numerZamowienia')
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error('Błąd podczas pobierania ostatniego numeru zlecenia:', error);
+      return 'BIAL0001';
+    }
+
+    if (data.length === 0 || !data[0].numerZamowienia) {
+      return 'BIAL0001';
+    }
+
+    const lastNumber = data[0].numerZamowienia;
+    const match = lastNumber.match(/BIAL(\d+)/);
+    const nextNumber = match ? parseInt(match[1]) + 1 : 1;
+    return `BIAL${nextNumber.toString().padStart(4, '0')}`;
+  };
 
   const sendEmail = async (e) => {
     e.preventDefault();
@@ -51,6 +73,8 @@ const Order = () => {
     setFormErrors({});
     setIsLoading(true);
 
+    const numerZlecenia = await generateOrderNumber();
+
     const formData = {
       rodzajuslugi: form.current.rodzajuslugi.value,
       rodzajodpadu: form.current.rodzajodpadu.value,
@@ -66,6 +90,7 @@ const Order = () => {
       platnosc: paymentMethod,
       szacowany: estimatedPrice?.toString() || null,
       dataDostawy: form.current.deliveryDate?.value || null,
+      numerZlecenia,
     };
 
     await handleSaveToSupabase(formData);

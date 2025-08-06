@@ -7,12 +7,12 @@ const AdminPanel = () => {
   const [editOrder, setEditOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
-  const [viewArchive, setViewArchive] = useState(false); // <== Nowe
+  const [viewArchive, setViewArchive] = useState(false);
 
   const allFields = [
     'name', 'forname', 'phone', 'email', 'nip',
     'rodzajuslugi', 'rodzajodpadu', 'address', 'postcode', 'city',
-    'message', 'platnosc', 'szacowany', 'Status'
+    'message', 'platnosc', 'szacowany', 'dataDostawy', 'numerKontenera', 'numerZlecenia', 'Status'
   ];
 
   const fetchOrders = async () => {
@@ -66,27 +66,12 @@ const AdminPanel = () => {
     else console.error('Błąd usuwania:', error.message);
   };
 
-  const getStatusStyles = (status) => {
-    switch ((status || '').toLowerCase()) {
-      case 'do realizacji':
-        return { border: 'border-green-500', icon: 'text-green-400 hover:text-green-300' };
-      case 'podstawiony':
-        return { border: 'border-yellow-500', icon: 'text-yellow-400 hover:text-yellow-300' };
-      case 'do odbioru':
-        return { border: 'border-red-500', icon: 'text-red-400 hover:text-red-300' };
-      case 'zrealizowane':
-        return { border: 'border-blue-500', icon: 'text-blue-400 hover:text-blue-300' };
-      default:
-        return { border: 'border-gray-500', icon: 'text-white hover:text-gray-300' };
-    }
-  };
-
   const filteredOrders = orders.filter(order =>
     viewArchive ? order.Status?.toLowerCase() === 'zrealizowane' : order.Status?.toLowerCase() !== 'zrealizowane'
   );
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-white px-4 py-8 font-Main">
+    <div className="min-h-screen bg-[#1a1a1a] text-white px-4 py-8 font-Main overflow-x-auto">
       <div className="flex items-center justify-center gap-4 mb-6">
         <h1 className="text-3xl font-bold text-yellow-500">Zamówienia</h1>
         <button
@@ -99,48 +84,50 @@ const AdminPanel = () => {
         </button>
       </div>
 
-      {filteredOrders.length === 0 ? (
-        <p className="text-center">Brak zamówień do wyświetlenia.</p>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filteredOrders.map((order) => {
-            const { border, icon } = getStatusStyles(order.Status);
-            return (
-              <div
-                key={order.id}
-                className={`relative p-5 rounded-xl border ${border} bg-[#2c2c2c] shadow-md`}
-              >
-                <div className="space-y-2 text-sm">
-                  {allFields.map((field) => (
-                    <div key={field}>
-                      <div className="text-yellow-400 font-medium capitalize">
-                        {field === 'szacowany'
-                          ? 'Szacowany koszt dostawy'
-                          : field === 'platnosc'
-                          ? 'Płatność'
-                          : field}
-                      </div>
-                      <div>{order[field]}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="absolute bottom-3 right-3 flex gap-3">
-                  <button onClick={() => handleEdit(order)} title="Edytuj" className={icon}>
-                    <FaEdit className="text-lg" />
-                  </button>
-                  <button onClick={() => confirmDelete(order.id)} title="Usuń" className="text-red-400 hover:text-red-300">
-                    <FaTrash className="text-lg" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <table className="w-full border border-yellow-400 text-sm">
+        <thead>
+          <tr className="bg-[#2c2c2c] text-yellow-400">
+            {allFields.map(field => (
+              <th key={field} className="border border-yellow-400 px-2 py-1 capitalize">
+                {field === 'szacowany'
+                  ? 'Szacowany koszt dostawy'
+                  : field === 'platnosc'
+                  ? 'Płatność'
+                  : field === 'dataDostawy'
+                  ? 'Data dostawy'
+                  : field === 'numerKontenera'
+                  ? 'Numer kontenera'
+                  : field === 'numerZlecenia'
+                  ? 'Numer zlecenia'
+                  : field}
+              </th>
+            ))}
+            <th className="border border-yellow-400 px-2 py-1">Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredOrders.map(order => (
+            <tr key={order.id} className="bg-[#1f1f1f] border-t border-yellow-300">
+              {allFields.map(field => (
+                <td key={field} className="px-2 py-1 border border-yellow-400 whitespace-nowrap">
+                  {order[field] || ''}
+                </td>
+              ))}
+              <td className="px-2 py-1 border border-yellow-400 whitespace-nowrap text-center">
+                <button onClick={() => handleEdit(order)} className="text-yellow-400 hover:text-yellow-200 mr-2" title="Edytuj">
+                  <FaEdit />
+                </button>
+                <button onClick={() => confirmDelete(order.id)} className="text-red-400 hover:text-red-200" title="Usuń">
+                  <FaTrash />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      {/* MODAL EDYCJI */}
       {isModalOpen && (
-        <div className="fixed top-0 left-0 w-full h-full z-[9999] flex items-center justify-center bg-black bg-opacity-70">
+        <div className="fixed top-0 left-0 w-full h-full z-[9999] flex items-center justify-center bg-black bg-opacity-70 overflow-auto py-10">
           <div className="bg-[#2c2c2c] text-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4">
             <h2 className="text-2xl font-bold mb-6 text-yellow-500 text-center">Edytuj zamówienie</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,14 +138,18 @@ const AdminPanel = () => {
                       ? 'Szacowany koszt dostawy'
                       : field === 'platnosc'
                       ? 'Płatność'
+                      : field === 'dataDostawy'
+                      ? 'Data dostawy'
+                      : field === 'numerKontenera'
+                      ? 'Numer kontenera'
+                      : field === 'numerZlecenia'
+                      ? 'Numer zlecenia'
                       : field}
                   </label>
                   {field === 'Status' ? (
                     <select
                       value={editOrder.Status || 'Do realizacji'}
-                      onChange={(e) =>
-                        setEditOrder({ ...editOrder, Status: e.target.value })
-                      }
+                      onChange={(e) => setEditOrder({ ...editOrder, Status: e.target.value })}
                       className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     >
                       <option value="Do realizacji">Do realizacji</option>
@@ -169,21 +160,24 @@ const AdminPanel = () => {
                   ) : field === 'platnosc' ? (
                     <select
                       value={editOrder.platnosc || ''}
-                      onChange={(e) =>
-                        setEditOrder({ ...editOrder, platnosc: e.target.value })
-                      }
+                      onChange={(e) => setEditOrder({ ...editOrder, platnosc: e.target.value })}
                       className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     >
                       <option value="karta">Karta</option>
                       <option value="gotówka">Gotówka</option>
                     </select>
+                  ) : field === 'dataDostawy' ? (
+                    <input
+                      type="date"
+                      value={editOrder.dataDostawy?.slice(0, 10) || ''}
+                      onChange={(e) => setEditOrder({ ...editOrder, dataDostawy: e.target.value })}
+                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    />
                   ) : (
                     <input
                       type="text"
                       value={editOrder[field] || ''}
-                      onChange={(e) =>
-                        setEditOrder({ ...editOrder, [field]: e.target.value })
-                      }
+                      onChange={(e) => setEditOrder({ ...editOrder, [field]: e.target.value })}
                       className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
                   )}
@@ -208,7 +202,6 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* MODAL USUWANIA */}
       {deleteTarget && (
         <div className="fixed inset-0 z-[9999] bg-black bg-opacity-70 flex items-center justify-center">
           <div className="bg-[#2c2c2c] text-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center border border-red-500">
