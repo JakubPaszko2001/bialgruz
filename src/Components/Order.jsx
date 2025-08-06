@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { supabase } from './Supabase';
-
+import Blik from "../Assets/blik.png";
 const Order = () => {
   const form = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -279,7 +279,12 @@ const Order = () => {
                   checked={paymentMethod === 'karta'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                Karta
+                Karta /
+                <img
+                  src={Blik}
+                  alt="BLIK icon"
+                  className="h-4 w-auto"
+                />
               </label>
             </div>
             {formErrors.platnosc && (
