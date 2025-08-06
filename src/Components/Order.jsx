@@ -345,7 +345,84 @@ const Order = () => {
         <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center px-4">
           <div className="bg-[#1E1E1E] text-white p-6 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-yellow-500 relative">
             <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">REGULAMIN ŚWIADCZENIA USŁUG – BIALGRUZ</h2>
-            {/* ...regulamin treść tu... */}
+<div className="space-y-4 text-sm leading-relaxed">
+                    <p><strong>§1. Postanowienia ogólne</strong><br />
+                    1. Niniejszy Regulamin określa zasady świadczenia usług wywozu gruzu, odpadów budowlanych oraz innych odpadów przez firmę BIALGRUZ.<br />
+                    2. Klientem może być osoba fizyczna, osoba prawna lub jednostka organizacyjna, która zawarła z firmą BIALGRUZ umowę ustną, pisemną, telefoniczną lub mailową.<br />
+                    3. Korzystając z usług BIALGRUZ, Klient akceptuje postanowienia niniejszego Regulaminu.</p>
+            
+                    <p><strong>§2. Zakres usług</strong><br />
+                    1. Firma BIALGRUZ świadczy usługi podstawienia, odbioru i wywozu:<br />
+                    - kontenerów na gruz czysty (beton, cegły, pustaki, dachówki, tynki, odpady ceramiczne, kamienie);<br />
+                    - kontenerów na odpady zmieszane (gruz, płyty G-K, szyby, okna, tworzywa sztuczne);<br />
+                    - worków typu Big-Bag (1 m³) na gruz lub odpady;<br />
+                    - drewna i rzeczy drewnopodobnych (pod warunkiem spakowania w osobne worki lub big bagi).<br />
+                    2. Odbiór odpadów odbywa się zgodnie z harmonogramem uzgodnionym z Klientem.<br />
+                    3. BIALGRUZ nie odbiera odpadów niebezpiecznych (azbest, papa, odpady medyczne, płyny, opony, elektroodpady).<br />
+                    4. Kontener podstawiany jest na okres 2 tygodni kalendarzowych z możliwością przedłużenia za dodatkową opłatą.</p>
+            
+                    <p><strong>§3. Zamówienie usługi</strong><br />
+                    1. Zamówienie można złożyć telefonicznie, mailowo lub przez formularz na stronie internetowej.<br />
+                    2. W zamówieniu należy podać:<br />
+                    - adres podstawienia kontenera,<br />
+                    - numer kontaktowy,<br />
+                    - rodzaj odpadów,<br />
+                    - przewidywany czas wynajmu kontenera,<br />
+                    - adres mailowy,<br />
+                    - sposób płatności (gotówka / przelew).<br />
+                    3. BIALGRUZ zastrzega sobie prawo do odmowy realizacji zlecenia w przypadku:<br />
+                    - braku dostępnych kontenerów;<br />
+                    - utrudnionego dojazdu;<br />
+                    - podejrzenia nielegalnego charakteru odpadów;<br />
+                    - nieuzgodnionej rezygnacji z usługi na mniej niż 12h przed realizacją (koszt manipulacyjny 100 zł netto).</p>
+            
+                    <p><strong>§4. Ceny i płatności</strong><br />
+                    1. Ceny ustalane są indywidualnie i przekazywane Klientowi przed realizacją zlecenia.<br />
+                    2. Płatności można dokonać:<br />
+                    - gotówką przy podstawieniu;<br />
+                    - szybkim przelewem (BLIK) lub kartą płatniczą przy podstawieniu;<br />
+                    - przelewem (do 3 dni od wystawienia faktury).<br />
+                    3. Cena zawiera: podstawienie, odbiór, utylizację odpadów do 4 ton oraz wynajem na 2 tygodnie.<br />
+                    4. Każdy dodatkowy tydzień wynajmu to koszt 150 zł netto.<br />
+                    5. W przypadku przekroczenia limitu wagowego lub stwierdzenia niedozwolonych odpadów, naliczane są dodatkowe opłaty (minimum 800 zł netto).</p>
+            
+                    <p><strong>§5. Obowiązki Klienta</strong><br />
+                    1. Klient zobowiązuje się do:<br />
+                    - nieprzekraczania wysokości kontenera przy załadunku (w przypadku gruzu nieprzekraczania limitu wagowego);<br />
+                    - niewrzucania odpadów zakazanych;<br />
+                    - zapewnienia dostępu do kontenera w dniu odbioru.<br />
+                    2. W przypadku podstawienia worka typu Big-Bag – ustawienia go w miejscu:<br />
+                    - umożliwiającym łatwy i bezpieczny dostęp dla pojazdu specjalistycznego;<br />
+                    - które nie posiada znaczącego nachylenia terenu i nie stwarza ryzyka przemieszczenia się worka;<br />
+                    - gwarantującym, że worek nie zostanie uszkodzony (naderwany, rozerwany) przed odbiorem – w przypadku uszkodzenia odbiór może zostać wstrzymany lub zakończony dodatkową opłatą.<br />
+                    3. W przypadku braku możliwości odbioru kontenera z winy Klienta, naliczana będzie opłata postojowa 100 zł netto za każdy dzień zwłoki + 50 zł netto za podjazd samochodu na terenie Białegostoku, a poza jego granicami +10 zł netto za każdy kilometr licząc od miejsca siedziby firmy.<br />
+                    4. Klient odpowiada za wszelkie szkody powstałe w kontenerze od momentu podstawienia do odbioru.<br />
+                    5. Klient ponosi odpowiedzialność za uszkodzenie terenu, na którym ustawiono kontener, jeśli wyraził zgodę na jego lokalizację.</p>
+            
+                    <p><strong>§6. Obowiązki firmy BIALGRUZ</strong><br />
+                    1. Firma zobowiązuje się do:<br />
+                    - podstawienia kontenera w uzgodnionym terminie;<br />
+                    - odbioru w umówionym czasie;<br />
+                    - legalnej utylizacji odpadów zgodnie z przepisami.<br />
+                    2. Firma nie ponosi odpowiedzialności za opóźnienia wynikłe z przyczyn niezależnych (awarie, korki, pogoda, siła wyższa).</p>
+            
+                    <p><strong>§7. Reklamacje i odpowiedzialność</strong><br />
+                    1. Reklamacje należy zgłaszać w ciągu 3 dni roboczych od zaistnienia sytuacji.<br />
+                    2. Czas rozpatrzenia: do 14 dni roboczych.<br />
+                    3. Odpowiedzialność firmy ogranicza się do wartości usługi. Firma nie odpowiada za szkody pośrednie.<br />
+                    4. W przypadku braku kontaktu z Klientem przez 48h od planowanego odbioru, firma zastrzega sobie prawo do samodzielnego odbioru kontenera.</p>
+            
+                    <p><strong>§8. Przetwarzanie danych osobowych</strong><br />
+                    1. Administratorem danych osobowych jest firma BIALGRUZ.<br />
+                    2. Dane przetwarzane są wyłącznie w celu realizacji zleceń zgodnie z RODO.<br />
+                    3. Klient ma prawo do wglądu, poprawiania i usuwania danych.</p>
+            
+                    <p><strong>§9. Postanowienia końcowe</strong><br />
+                    1. Wszelkie spory rozstrzygane będą przez sąd właściwy dla siedziby BIALGRUZ.<br />
+                    2. Prawem właściwym dla niniejszego Regulaminu jest prawo polskie.<br />
+                    3. Regulamin wchodzi w życie z dniem opublikowania i może być zmieniony w dowolnym czasie, z zastrzeżeniem poinformowania Klientów.</p>
+                  </div>
+            
             <button onClick={() => setIsRegulaminOpen(false)} className="absolute top-3 right-3 text-yellow-400 text-xl">×</button>
           </div>
         </div>
@@ -355,7 +432,14 @@ const Order = () => {
         <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center px-4">
           <div className="bg-[#1E1E1E] text-white p-6 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-yellow-500 relative">
             <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">Polityka RODO – BIALGRUZ</h2>
-            {/* ...treść polityki RODO... */}
+            <div className="space-y-4 text-sm leading-relaxed">
+              <p><strong>Administrator danych:</strong> Administratorem danych osobowych jest firma BIALGRUZ.</p>
+              <p><strong>Cel przetwarzania:</strong> Dane są przetwarzane w celu realizacji usług, kontaktu z klientem, wystawienia faktury oraz archiwizacji zamówień.</p>
+              <p><strong>Okres przechowywania:</strong> Dane będą przechowywane przez okres maksymalnie 5 lat od daty realizacji zamówienia.</p>
+              <p><strong>Podstawy prawne:</strong> Przetwarzanie danych odbywa się zgodnie z art. 6 ust. 1 lit. a, b i c RODO.</p>
+              <p><strong>Prawa użytkownika:</strong> Masz prawo do wglądu, poprawienia, usunięcia lub ograniczenia przetwarzania danych oraz wniesienia sprzeciwu wobec ich przetwarzania.</p>
+              <p><strong>Kontakt:</strong> W sprawach związanych z danymi osobowymi prosimy o kontakt: <span className="text-yellow-400">kontakt@bialgruz.pl</span></p>
+            </div>
             <button onClick={() => setIsRODOModalOpen(false)} className="absolute top-3 right-3 text-yellow-400 text-xl">×</button>
           </div>
         </div>
