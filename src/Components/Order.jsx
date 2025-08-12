@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { supabase } from './Supabase';
 import Blik from "../Assets/blik.webp";
+
 const Order = () => {
   const form = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -14,102 +15,171 @@ const Order = () => {
   const [isRODOModalOpen, setIsRODOModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
 
-  const requiredFields = [
+  // NOWE: tryb współrzędnych
+  const [useCoords, setUseCoords] = useState(false);
+  const [coordsInput, setCoordsInput] = useState(''); // np. "53.415948, 23.015854" lub link
+
+  const requiredFieldsBase = [
     'rodzajuslugi', 'rodzajodpadu', 'name', 'forname',
-    'address', 'postcode', 'city', 'email', 'phone', 'deliveryDate'
+    'email', 'phone', 'deliveryDate'
   ];
+  // adres wymagany tylko, gdy NIE używamy współrzędnych
+  const addressFields = ['address', 'postcode', 'city'];
 
   const generateOrderNumber = async () => {
     const { data, error } = await supabase
       .from('Zamówienia')
-      .select('numerZamowienia')
-      .order('created_at', { ascending: false })
+      .select('numerZlecenia, id')
+      .order('id', { ascending: false })
       .limit(1);
-
+  
     if (error) {
       console.error('Błąd podczas pobierania ostatniego numeru zlecenia:', error);
       return 'BIAL0001';
     }
-
-    if (data.length === 0 || !data[0].numerZamowienia) {
-      return 'BIAL0001';
-    }
-
-    const lastNumber = data[0].numerZamowienia;
+  
+    if (!data?.length || !data[0]?.numerZlecenia) return 'BIAL0001';
+  
+    const lastNumber = data[0].numerZlecenia; // <- poprawna nazwa kolumny
     const match = lastNumber.match(/BIAL(\d+)/);
-    const nextNumber = match ? parseInt(match[1]) + 1 : 1;
+    const nextNumber = match ? parseInt(match[1], 10) + 1 : 1;
     return `BIAL${nextNumber.toString().padStart(4, '0')}`;
+  };
+
+  // Parser współrzędnych: z "lat, lon" lub z linku do map
+  const parseCoordinates = (input) => {
+    if (!input) return null;
+    const str = String(input).trim();
+    // szukamy dwóch liczb zmiennoprzecinkowych z separatorem "," lub spacją
+    const re = /(-?\d{1,3}(?:\.\d+))[^0-9-]+(-?\d{1,3}(?:\.\d+))/;
+    const m = str.match(re);
+    if (!m) return null;
+    const lat = parseFloat(m[1]);
+    const lon = parseFloat(m[2]);
+    if (!isFinite(lat) || !isFinite(lon)) return null;
+    if (Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+    return { lat, lon };
   };
 
   const sendEmail = async (e) => {
     e.preventDefault();
+  
+    // — pola obowiązkowe niezależnie od adresu/współrzędnych
+    const requiredFieldsBase = [
+      'rodzajuslugi', 'rodzajodpadu', 'name', 'forname',
+      'email', 'phone', 'deliveryDate'
+    ];
+    // — pola adresowe wymagane TYLKO gdy nie podajemy współrzędnych
+    const addressFields = ['address', 'postcode', 'city'];
+  
     const newErrors = {};
-
-    for (const field of requiredFields) {
+  
+    // Walidacja pól bazowych
+    for (const field of requiredFieldsBase) {
       const value = form.current[field]?.value?.trim();
       if (!value) newErrors[field] = 'Uzupełnij to pole';
     }
-
+  
+    // NIP tylko gdy checkbox na fakturę
     if (showNIPField && !form.current.nip?.value?.trim()) {
       newErrors.nip = 'Uzupełnij to pole';
     }
-
+  
+    // Adres vs współrzędne
+    let coords = null;
+    if (useCoords) {
+      // parser: akceptuje "53.4159, 23.0158" i linki z map
+      const re = /(-?\d{1,3}(?:\.\d+))[^0-9-]+(-?\d{1,3}(?:\.\d+))/;
+      const str = String(coordsInput || '').trim();
+      const m = str.match(re);
+      if (m) {
+        const lat = parseFloat(m[1]);
+        const lon = parseFloat(m[2]);
+        if (isFinite(lat) && isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+          coords = { lat, lon };
+        }
+      }
+      if (!coords) newErrors.coords = 'Podaj współrzędne w formacie "53.4159, 23.0158" lub wklej link z map';
+    } else {
+      for (const f of addressFields) {
+        const v = form.current[f]?.value?.trim();
+        if (!v) newErrors[f] = 'Uzupełnij to pole';
+      }
+    }
+  
+    // Szacowany koszt musi być policzony
     if (estimatedPrice === null) {
       setTransportError(true);
       return;
     } else {
       setTransportError(false);
     }
-
+  
+    // Metoda płatności
     if (!paymentMethod) {
       newErrors.platnosc = 'Wybierz metodę płatności';
     }
-
+  
+    // Jeśli są błędy – pokaż i wyjdź
     if (Object.keys(newErrors).length > 0) {
       setFormErrors(newErrors);
       return;
     }
-
+  
     setFormErrors({});
     setIsLoading(true);
-
-    const numerZlecenia = await generateOrderNumber();
-
-    const formData = {
-      rodzajuslugi: form.current.rodzajuslugi.value,
-      rodzajodpadu: form.current.rodzajodpadu.value,
-      name: form.current.name.value,
-      forname: form.current.forname.value,
-      address: form.current.address.value,
-      postcode: form.current.postcode.value,
-      city: form.current.city.value,
-      email: form.current.email.value,
-      phone: form.current.phone.value,
-      message: form.current.message.value,
-      nip: showNIPField ? form.current.nip?.value?.trim() || null : null,
-      platnosc: paymentMethod,
-      szacowany: estimatedPrice?.toString() || null,
-      dataDostawy: form.current.deliveryDate?.value || null,
-      numerZlecenia,
-    };
-
+  
+    try {
+      const numerZlecenia = await generateOrderNumber();
+      const userMessage = form.current.message.value || '';
+      // >>> dane wysyłane do Supabase (zapis koordynatów do kolumny "koordynaty")
+  const formData = {
+    rodzajuslugi: form.current.rodzajuslugi.value,
+    rodzajodpadu: form.current.rodzajodpadu.value,
+    name: form.current.name.value,
+    forname: form.current.forname.value,
+  
+    // ⬇⬇⬇ bezpieczne odczyty; gdy useCoords — puste
+    address: useCoords ? '' : (form.current.address?.value || ''),
+    postcode: useCoords ? '' : (form.current.postcode?.value || ''),
+    city: useCoords ? '' : (form.current.city?.value || ''),
+  
+    email: form.current.email.value,
+    phone: form.current.phone.value,
+    message: userMessage,
+    nip: showNIPField ? (form.current.nip?.value?.trim() || null) : null,
+    platnosc: paymentMethod,
+    szacowany: estimatedPrice?.toString() || null,
+    dataDostawy: form.current.deliveryDate?.value || null,
+    numerZlecenia,
+  
+    // zapis współrzędnych do kolumny TEXT
+    koordynaty: useCoords && coords ? `${coords.lat}, ${coords.lon}` : null,
+  };
     await handleSaveToSupabase(formData);
 
-    emailjs
-      .sendForm('service_vkm0g32', 'template_5n86nfp', form.current, 'H8LWCkDY6CYMOnRKn')
-      .then(() => {
-        form.current.reset();
-        setEstimatedPrice(null);
-        setPaymentMethod('');
-        setIsSuccessModalOpen(true);
-      })
-      .catch((error) => {
-        alert('Błąd wysyłki: ' + error.text);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+    // e-mail
+    await emailjs.sendForm(
+      'service_vkm0g32',
+      'template_5n86nfp',
+      form.current,
+      'H8LWCkDY6CYMOnRKn'
+    );
+
+    // reset UI
+    form.current.reset();
+    setEstimatedPrice(null);
+    setPaymentMethod('');
+    setCoordsInput('');
+    setUseCoords(false);
+    setIsSuccessModalOpen(true);
+  } catch (error) {
+    console.error(error);
+    alert('Wystąpił błąd podczas wysyłki/zapisu.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleSaveToSupabase = async (data) => {
     const { error } = await supabase
@@ -143,6 +213,27 @@ const Order = () => {
   };
 
   const updateEstimatedPrice = async () => {
+    // Jeżeli są współrzędne – licz bez geokodowania
+    if (useCoords) {
+      const coords = parseCoordinates(coordsInput);
+      if (!coords) {
+        setEstimatedPrice(null);
+        setFormErrors((p) => ({ ...p, coords: 'Podaj poprawne współrzędne' }));
+        return;
+      }
+      const distance = calculateDistance(53.14717, 23.17618, coords.lat, coords.lon);
+      const basePrice = getBasePrice(form.current.rodzajuslugi.value, form.current.rodzajodpadu.value);
+      const estimated = Math.round(basePrice + distance * 10.8);
+      setEstimatedPrice(estimated);
+      setTransportError(false);
+      setFormErrors((p) => {
+        const { coords, ...rest } = p;
+        return rest;
+      });
+      return;
+    }
+
+    // W przeciwnym razie – geokoduj adres
     const address = form.current?.address?.value || '';
     const postcode = form.current?.postcode?.value || '';
     const city = form.current?.city?.value || '';
@@ -168,7 +259,7 @@ const Order = () => {
         );
         const estimated = Math.round(basePrice + distance * 10.8);
         setEstimatedPrice(estimated);
-        setTransportError(false); // ukryj komunikat
+        setTransportError(false);
       } else {
         setEstimatedPrice(null);
       }
@@ -203,12 +294,13 @@ const Order = () => {
       )}
     </div>
   );
+
   return (
     <div id="order" className="w-full bg-[#222222] px-[20px] pb-12 relative">
       <h1 className="text-3xl font-bold text-white text-center py-12">Złóż zamówienie</h1>
       <div className="bg-[#1E1D1C] text-white max-w-4xl mx-auto p-6 rounded-xl shadow">
         <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          
+
           <div className="md:col-span-2">
             <label htmlFor="rodzajuslugi" className="text-yellow-400">Rodzaj usługi:</label>
             <select id="rodzajuslugi" name="rodzajuslugi" className="w-full p-3 border border-yellow-500 rounded-md bg-transparent">
@@ -235,11 +327,63 @@ const Order = () => {
             <label htmlFor="naFakture" className="text-yellow-400">Chcę otrzymać fakturę VAT</label>
           </div>
 
+          {/* PRZEŁĄCZNIK: współrzędne */}
+          <div className="md:col-span-2 flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="useCoords"
+              className="accent-yellow-500"
+              checked={useCoords}
+              onChange={(e) => {
+                setUseCoords(e.target.checked);
+                setFormErrors((prev) => {
+                  const updated = { ...prev };
+                  delete updated.address; delete updated.postcode; delete updated.city; delete updated.coords;
+                  return updated;
+                });
+              }}
+            />
+            <label htmlFor="useCoords" className="text-yellow-400">
+              Nie mam adresu — podam współrzędne (lat, lon)
+            </label>
+          </div>
+
+          {/* Adres albo współrzędne */}
+          {!useCoords ? (
+            <>
+              {renderInput('address', 'Adres dostawy')}
+              {renderInput('postcode', 'Kod pocztowy')}
+              {renderInput('city', 'Miejscowość')}
+            </>
+          ) : (
+            <div className="md:col-span-2">
+              <label htmlFor="coords" className="text-yellow-400">Współrzędne (lat, lon) lub link do map:</label>
+              <input
+                id="coords"
+                name="coords" // trafi też do emailjs
+                type="text"
+                value={coordsInput}
+                onChange={(e) => {
+                  setCoordsInput(e.target.value);
+                  if (formErrors.coords) {
+                    setFormErrors((prev) => {
+                      const u = { ...prev }; delete u.coords; return u;
+                    });
+                  }
+                }}
+                placeholder="np. 53.415948, 23.015854 lub wklej link z Google Maps"
+                className={`w-full p-3 border rounded-md bg-transparent ${
+                  formErrors.coords ? 'border-red-500' : 'border-yellow-500'
+                }`}
+              />
+              {formErrors.coords && (
+                <p className="text-red-500 text-sm mt-1">{formErrors.coords}</p>
+              )}
+            </div>
+          )}
+
           {renderInput('name', 'Imię')}
           {renderInput('forname', 'Nazwisko')}
-          {renderInput('address', 'Adres dostawy')}
-          {renderInput('postcode', 'Kod pocztowy')}
-          {renderInput('city', 'Miejscowość')}
           {renderInput('email', 'Email', 'email')}
           {renderInput('phone', 'Telefon', 'tel')}
 
@@ -305,11 +449,7 @@ const Order = () => {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
                 Karta /
-                <img
-                  src={Blik}
-                  alt="BLIK icon"
-                  className="h-4 w-auto"
-                />
+                <img src={Blik} alt="BLIK icon" className="h-4 w-auto" />
               </label>
             </div>
             {formErrors.platnosc && (
@@ -375,84 +515,83 @@ const Order = () => {
         <div className="fixed inset-0 bg-black bg-opacity-80 z-[9999] flex items-center justify-center px-4">
           <div className="bg-[#1E1E1E] text-white p-6 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-yellow-500 relative">
             <h2 className="text-2xl font-bold mb-4 text-yellow-400 text-center">REGULAMIN ŚWIADCZENIA USŁUG – BIALGRUZ</h2>
-<div className="space-y-4 text-sm leading-relaxed">
-                    <p><strong>§1. Postanowienia ogólne</strong><br />
-                    1. Niniejszy Regulamin określa zasady świadczenia usług wywozu gruzu, odpadów budowlanych oraz innych odpadów przez firmę BIALGRUZ.<br />
-                    2. Klientem może być osoba fizyczna, osoba prawna lub jednostka organizacyjna, która zawarła z firmą BIALGRUZ umowę ustną, pisemną, telefoniczną lub mailową.<br />
-                    3. Korzystając z usług BIALGRUZ, Klient akceptuje postanowienia niniejszego Regulaminu.</p>
-            
-                    <p><strong>§2. Zakres usług</strong><br />
-                    1. Firma BIALGRUZ świadczy usługi podstawienia, odbioru i wywozu:<br />
-                    - kontenerów na gruz czysty (beton, cegły, pustaki, dachówki, tynki, odpady ceramiczne, kamienie);<br />
-                    - kontenerów na odpady zmieszane (gruz, płyty G-K, szyby, okna, tworzywa sztuczne);<br />
-                    - worków typu Big-Bag (1 m³) na gruz lub odpady;<br />
-                    - drewna i rzeczy drewnopodobnych (pod warunkiem spakowania w osobne worki lub big bagi).<br />
-                    2. Odbiór odpadów odbywa się zgodnie z harmonogramem uzgodnionym z Klientem.<br />
-                    3. BIALGRUZ nie odbiera odpadów niebezpiecznych (azbest, papa, odpady medyczne, płyny, opony, elektroodpady).<br />
-                    4. Kontener podstawiany jest na okres 2 tygodni kalendarzowych z możliwością przedłużenia za dodatkową opłatą.</p>
-            
-                    <p><strong>§3. Zamówienie usługi</strong><br />
-                    1. Zamówienie można złożyć telefonicznie, mailowo lub przez formularz na stronie internetowej.<br />
-                    2. W zamówieniu należy podać:<br />
-                    - adres podstawienia kontenera,<br />
-                    - numer kontaktowy,<br />
-                    - rodzaj odpadów,<br />
-                    - przewidywany czas wynajmu kontenera,<br />
-                    - adres mailowy,<br />
-                    - sposób płatności (gotówka / przelew).<br />
-                    3. BIALGRUZ zastrzega sobie prawo do odmowy realizacji zlecenia w przypadku:<br />
-                    - braku dostępnych kontenerów;<br />
-                    - utrudnionego dojazdu;<br />
-                    - podejrzenia nielegalnego charakteru odpadów;<br />
-                    - nieuzgodnionej rezygnacji z usługi na mniej niż 12h przed realizacją (koszt manipulacyjny 100 zł netto).</p>
-            
-                    <p><strong>§4. Ceny i płatności</strong><br />
-                    1. Ceny ustalane są indywidualnie i przekazywane Klientowi przed realizacją zlecenia.<br />
-                    2. Płatności można dokonać:<br />
-                    - gotówką przy podstawieniu;<br />
-                    - szybkim przelewem (BLIK) lub kartą płatniczą przy podstawieniu;<br />
-                    - przelewem (do 3 dni od wystawienia faktury).<br />
-                    3. Cena zawiera: podstawienie, odbiór, utylizację odpadów do 4 ton oraz wynajem na 2 tygodnie.<br />
-                    4. Każdy dodatkowy tydzień wynajmu to koszt 150 zł netto.<br />
-                    5. W przypadku przekroczenia limitu wagowego lub stwierdzenia niedozwolonych odpadów, naliczane są dodatkowe opłaty (minimum 800 zł netto).</p>
-            
-                    <p><strong>§5. Obowiązki Klienta</strong><br />
-                    1. Klient zobowiązuje się do:<br />
-                    - nieprzekraczania wysokości kontenera przy załadunku (w przypadku gruzu nieprzekraczania limitu wagowego);<br />
-                    - niewrzucania odpadów zakazanych;<br />
-                    - zapewnienia dostępu do kontenera w dniu odbioru.<br />
-                    2. W przypadku podstawienia worka typu Big-Bag – ustawienia go w miejscu:<br />
-                    - umożliwiającym łatwy i bezpieczny dostęp dla pojazdu specjalistycznego;<br />
-                    - które nie posiada znaczącego nachylenia terenu i nie stwarza ryzyka przemieszczenia się worka;<br />
-                    - gwarantującym, że worek nie zostanie uszkodzony (naderwany, rozerwany) przed odbiorem – w przypadku uszkodzenia odbiór może zostać wstrzymany lub zakończony dodatkową opłatą.<br />
-                    3. W przypadku braku możliwości odbioru kontenera z winy Klienta, naliczana będzie opłata postojowa 100 zł netto za każdy dzień zwłoki + 50 zł netto za podjazd samochodu na terenie Białegostoku, a poza jego granicami +10 zł netto za każdy kilometr licząc od miejsca siedziby firmy.<br />
-                    4. Klient odpowiada za wszelkie szkody powstałe w kontenerze od momentu podstawienia do odbioru.<br />
-                    5. Klient ponosi odpowiedzialność za uszkodzenie terenu, na którym ustawiono kontener, jeśli wyraził zgodę na jego lokalizację.</p>
-            
-                    <p><strong>§6. Obowiązki firmy BIALGRUZ</strong><br />
-                    1. Firma zobowiązuje się do:<br />
-                    - podstawienia kontenera w uzgodnionym terminie;<br />
-                    - odbioru w umówionym czasie;<br />
-                    - legalnej utylizacji odpadów zgodnie z przepisami.<br />
-                    2. Firma nie ponosi odpowiedzialności za opóźnienia wynikłe z przyczyn niezależnych (awarie, korki, pogoda, siła wyższa).</p>
-            
-                    <p><strong>§7. Reklamacje i odpowiedzialność</strong><br />
-                    1. Reklamacje należy zgłaszać w ciągu 3 dni roboczych od zaistnienia sytuacji.<br />
-                    2. Czas rozpatrzenia: do 14 dni roboczych.<br />
-                    3. Odpowiedzialność firmy ogranicza się do wartości usługi. Firma nie odpowiada za szkody pośrednie.<br />
-                    4. W przypadku braku kontaktu z Klientem przez 48h od planowanego odbioru, firma zastrzega sobie prawo do samodzielnego odbioru kontenera.</p>
-            
-                    <p><strong>§8. Przetwarzanie danych osobowych</strong><br />
-                    1. Administratorem danych osobowych jest firma BIALGRUZ.<br />
-                    2. Dane przetwarzane są wyłącznie w celu realizacji zleceń zgodnie z RODO.<br />
-                    3. Klient ma prawo do wglądu, poprawiania i usuwania danych.</p>
-            
-                    <p><strong>§9. Postanowienia końcowe</strong><br />
-                    1. Wszelkie spory rozstrzygane będą przez sąd właściwy dla siedziby BIALGRUZ.<br />
-                    2. Prawem właściwym dla niniejszego Regulaminu jest prawo polskie.<br />
-                    3. Regulamin wchodzi w życie z dniem opublikowania i może być zmieniony w dowolnym czasie, z zastrzeżeniem poinformowania Klientów.</p>
-                  </div>
-            
+              <div className="space-y-4 text-sm leading-relaxed">
+                <p><strong>§1. Postanowienia ogólne</strong><br />
+                1. Niniejszy Regulamin określa zasady świadczenia usług wywozu gruzu, odpadów budowlanych oraz innych odpadów przez firmę BIALGRUZ.<br />
+                2. Klientem może być osoba fizyczna, osoba prawna lub jednostka organizacyjna, która zawarła z firmą BIALGRUZ umowę ustną, pisemną, telefoniczną lub mailową.<br />
+                3. Korzystając z usług BIALGRUZ, Klient akceptuje postanowienia niniejszego Regulaminu.</p>
+        
+                <p><strong>§2. Zakres usług</strong><br />
+                1. Firma BIALGRUZ świadczy usługi podstawienia, odbioru i wywozu:<br />
+                - kontenerów na gruz czysty (beton, cegły, pustaki, dachówki, tynki, odpady ceramiczne, kamienie);<br />
+                - kontenerów na odpady zmieszane (gruz, płyty G-K, szyby, okna, tworzywa sztuczne);<br />
+                - worków typu Big-Bag (1 m³) na gruz lub odpady;<br />
+                - drewna i rzeczy drewnopodobnych (pod warunkiem spakowania w osobne worki lub big bagi).<br />
+                2. Odbiór odpadów odbywa się zgodnie z harmonogramem uzgodnionym z Klientem.<br />
+                3. BIALGRUZ nie odbiera odpadów niebezpiecznych (azbest, papa, odpady medyczne, płyny, opony, elektroodpady).<br />
+                4. Kontener podstawiany jest na okres 2 tygodni kalendarzowych z możliwością przedłużenia za dodatkową opłatą.</p>
+        
+                <p><strong>§3. Zamówienie usługi</strong><br />
+                1. Zamówienie można złożyć telefonicznie, mailowo lub przez formularz na stronie internetowej.<br />
+                2. W zamówieniu należy podać:<br />
+                - adres podstawienia kontenera,<br />
+                - numer kontaktowy,<br />
+                - rodzaj odpadów,<br />
+                - przewidywany czas wynajmu kontenera,<br />
+                - adres mailowy,<br />
+                - sposób płatności (gotówka / przelew).<br />
+                3. BIALGRUZ zastrzega sobie prawo do odmowy realizacji zlecenia w przypadku:<br />
+                - braku dostępnych kontenerów;<br />
+                - utrudnionego dojazdu;<br />
+                - podejrzenia nielegalnego charakteru odpadów;<br />
+                - nieuzgodnionej rezygnacji z usługi na mniej niż 12h przed realizacją (koszt manipulacyjny 100 zł netto).</p>
+        
+                <p><strong>§4. Ceny i płatności</strong><br />
+                1. Ceny ustalane są indywidualnie i przekazywane Klientowi przed realizacją zlecenia.<br />
+                2. Płatności można dokonać:<br />
+                - gotówką przy podstawieniu;<br />
+                - szybkim przelewem (BLIK) lub kartą płatniczą przy podstawieniu;<br />
+                - przelewem (do 3 dni od wystawienia faktury).<br />
+                3. Cena zawiera: podstawienie, odbiór, utylizację odpadów do 4 ton oraz wynajem na 2 tygodnie.<br />
+                4. Każdy dodatkowy tydzień wynajmu to koszt 150 zł netto.<br />
+                5. W przypadku przekroczenia limitu wagowego lub stwierdzenia niedozwolonych odpadów, naliczane są dodatkowe opłaty (minimum 800 zł netto).</p>
+        
+                <p><strong>§5. Obowiązki Klienta</strong><br />
+                1. Klient zobowiązuje się do:<br />
+                - nieprzekraczania wysokości kontenera przy załadunku (w przypadku gruzu nieprzekraczania limitu wagowego);<br />
+                - niewrzucania odpadów zakazanych;<br />
+                - zapewnienia dostępu do kontenera w dniu odbioru.<br />
+                2. W przypadku podstawienia worka typu Big-Bag – ustawienia go w miejscu:<br />
+                - umożliwiającym łatwy i bezpieczny dostęp dla pojazdu specjalistycznego;<br />
+                - które nie posiada znaczącego nachylenia terenu i nie stwarza ryzyka przemieszczenia się worka;<br />
+                - gwarantującym, że worek nie zostanie uszkodzony (naderwany, rozerwany) przed odbiorem – w przypadku uszkodzenia odbiór może zostać wstrzymany lub zakończony dodatkową opłatą.<br />
+                3. W przypadku braku możliwości odbioru kontenera z winy Klienta, naliczana będzie opłata postojowa 100 zł netto za każdy dzień zwłoki + 50 zł netto za podjazd samochodu na terenie Białegostoku, a poza jego granicami +10 zł netto za każdy kilometr licząc od miejsca siedziby firmy.<br />
+                4. Klient odpowiada za wszelkie szkody powstałe w kontenerze od momentu podstawienia do odbioru.<br />
+                5. Klient ponosi odpowiedzialność za uszkodzenie terenu, na którym ustawiono kontener, jeśli wyraził zgodę na jego lokalizację.</p>
+        
+                <p><strong>§6. Obowiązki firmy BIALGRUZ</strong><br />
+                1. Firma zobowiązuje się do:<br />
+                - podstawienia kontenera w uzgodnionym terminie;<br />
+                - odbioru w umówionym czasie;<br />
+                - legalnej utylizacji odpadów zgodnie z przepisami.<br />
+                2. Firma nie ponosi odpowiedzialności za opóźnienia wynikłe z przyczyn niezależnych (awarie, korki, pogoda, siła wyższa).</p>
+        
+                <p><strong>§7. Reklamacje i odpowiedzialność</strong><br />
+                1. Reklamacje należy zgłaszać w ciągu 3 dni roboczych od zaistnienia sytuacji.<br />
+                2. Czas rozpatrzenia: do 14 dni roboczych.<br />
+                3. Odpowiedzialność firmy ogranicza się do wartości usługi. Firma nie odpowiada za szkody pośrednie.<br />
+                4. W przypadku braku kontaktu z Klientem przez 48h od planowanego odbioru, firma zastrzega sobie prawo do samodzielnego odbioru kontenera.</p>
+        
+                <p><strong>§8. Przetwarzanie danych osobowych</strong><br />
+                1. Administratorem danych osobowych jest firma BIALGRUZ.<br />
+                2. Dane przetwarzane są wyłącznie w celu realizacji zleceń zgodnie z RODO.<br />
+                3. Klient ma prawo do wglądu, poprawiania i usuwania danych.</p>
+        
+                <p><strong>§9. Postanowienia końcowe</strong><br />
+                1. Wszelkie spory rozstrzygane będą przez sąd właściwy dla siedziby BIALGRUZ.<br />
+                2. Prawem właściwym dla niniejszego Regulaminu jest prawo polskie.<br />
+                3. Regulamin wchodzi w życie z dniem opublikowania i może być zmieniony w dowolnym czasie, z zastrzeżeniem poinformowania Klientów.</p>
+              </div>
             <button onClick={() => setIsRegulaminOpen(false)} className="absolute top-3 right-3 text-yellow-400 text-xl">×</button>
           </div>
         </div>

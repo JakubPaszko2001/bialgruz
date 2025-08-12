@@ -17,7 +17,8 @@ const Contact = () => {
               <p>+ 48 799 092 000</p>
               <p>+ 48 799 093 000</p>
               <p className="mt-1">
-                <span className="font-bold">Otwarte Pon-Pt:</span> 07:00 - 17:00
+                <span className="font-bold">Otwarte Pon-Pt:</span> 07:00 - 20:00 <br />
+                <span className="font-bold">Otwarte Sob:</span> 08:00 - 15:00
               </p>
             </div>
           </div>

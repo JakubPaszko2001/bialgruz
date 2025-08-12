@@ -1,5 +1,5 @@
 import React from 'react'
-import bgMain from '../Assets/bg-main2.webp'
+import bgMain from '../Assets/bg-main23.webp'
 const MainPage = () => {
   return (
     <div style={{ backgroundImage: `url(${bgMain})` }} id='main' className='relative bg-cover bg-center w-full min-h-screen max-h-screen bg-black flex flex-col items-center justify-center px-[20px] overflow-hidden'>
