@@ -427,8 +427,9 @@ const AdminPanel = () => {
                           className="w-full px-3 py-2 min-h-[40px] bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
                         >
                           <option value="">— wybierz —</option>
-                          <option value="karta">Karta</option>
                           <option value="gotówka">Gotówka</option>
+                          <option value="karta">Karta</option>
+                          <option value="przelew">Przelew</option>
                         </select>
                       ) : field === 'dataDostawy' ? (
                         <input

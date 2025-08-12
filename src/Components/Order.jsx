@@ -451,6 +451,17 @@ const Order = () => {
                 Karta /
                 <img src={Blik} alt="BLIK icon" className="h-4 w-auto" />
               </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="platnosc"
+                  value="przelew"
+                  className="accent-yellow-500"
+                  checked={paymentMethod === 'przelew'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+                Przelew
+              </label>
             </div>
             {formErrors.platnosc && (
               <p className="text-red-500 text-sm mt-1">{formErrors.platnosc}</p>
