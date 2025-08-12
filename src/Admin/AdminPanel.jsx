@@ -25,6 +25,15 @@ const AdminPanel = () => {
     'numerKontenera', 'numerZlecenia', 'Status', 'dataUtworzenia'
   ];
 
+  useEffect(() => {
+  if (isModalOpen) {
+    const { style } = document.body;
+    const prev = style.overflow;
+    style.overflow = 'hidden';
+    return () => { style.overflow = prev; };
+  }
+  }, [isModalOpen]);
+
   const labelFor = (field) => {
     switch (field) {
       case 'name': return 'Imię';
@@ -377,72 +386,88 @@ const AdminPanel = () => {
       </table>
 
       {isModalOpen && (
-        <div className="fixed top-0 left-0 w-full h-full z-[9999] flex items-center justify-center bg-black bg-opacity-70 overflow-auto py-10">
-          <div className="bg-[#2c2c2c] text-white p-6 rounded-lg shadow-xl w-full max-w-2xl mx-4">
-            <h2 className="text-2xl font-bold mb-6 text-yellow-500 text-center">Edytuj zamówienie</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {allFields.map((field) => (
-                <div key={field}>
-                  <label className="block text-sm font-medium mb-1 capitalize text-yellow-400">
-                    {labelFor(field)}
-                  </label>
-                  {field === 'Status' ? (
-                    <select
-                      value={editOrder?.Status || 'Do realizacji'}
-                      onChange={(e) => setEditOrder({ ...editOrder, Status: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
-                      <option value="Do realizacji">Do realizacji</option>
-                      <option value="Podstawiony">Podstawiony</option>
-                      <option value="Do odbioru">Do odbioru</option>
-                      <option value="Zrealizowane">Zrealizowane</option>
-                    </select>
-                  ) : field === 'platnosc' ? (
-                    <select
-                      value={editOrder?.platnosc || ''}
-                      onChange={(e) => setEditOrder({ ...editOrder, platnosc: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
-                      <option value="">— wybierz —</option>
-                      <option value="karta">Karta</option>
-                      <option value="gotówka">Gotówka</option>
-                    </select>
-                  ) : field === 'dataDostawy' ? (
-                    <input
-                      type="date"
-                      value={editOrder?.dataDostawy ? String(editOrder.dataDostawy).slice(0, 10) : ''}
-                      onChange={(e) => setEditOrder({ ...editOrder, dataDostawy: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      value={editOrder?.[field] || ''}
-                      onChange={(e) => setEditOrder({ ...editOrder, [field]: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
-                  )}
+        <div className="fixed inset-0 z-[9999] bg-black/70 overscroll-contain">
+          <div className="flex items-stretch justify-center p-0 sm:p-8 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] min-h-[100svh]">
+            {/* KARTA MODALA = kolumny: header | content (scroll) | footer (na dole) */}
+            <div className="w-full sm:max-w-2xl bg-[#2c2c2c] text-white sm:rounded-xl overflow-hidden border border-yellow-500/60 sm:shadow-xl flex flex-col h-[100svh] sm:h-auto sm:max-h-[85vh]">
+              {/* Header (cienki) */}
+              <div className="shrink-0 bg-[#2c2c2c] border-b border-yellow-500/40 px-3 py-2 flex items-center justify-between">
+                <h2 className="text-base sm:text-xl font-bold text-yellow-500">Edytuj zamówienie</h2>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-yellow-400 hover:text-yellow-200 text-xl leading-none px-2"
+                  aria-label="Zamknij"
+                >
+                  ×
+                </button>
+              </div>
+              {/* Treść (scrolluje się) */}
+              <div className="flex-1 overflow-y-auto px-3 py-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {allFields.map((field) => (
+                    <div key={field}>
+                      <label className="block text-sm font-medium mb-1 capitalize text-yellow-400">
+                        {labelFor(field)}
+                      </label>
+                      {field === 'Status' ? (
+                        <select
+                          value={editOrder?.Status || 'Do realizacji'}
+                          onChange={(e) => setEditOrder({ ...editOrder, Status: e.target.value })}
+                          className="w-full px-3 py-2 min-h-[40px] bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        >
+                          <option value="Do realizacji">Do realizacji</option>
+                          <option value="Podstawiony">Podstawiony</option>
+                          <option value="Do odbioru">Do odbioru</option>
+                          <option value="Zrealizowane">Zrealizowane</option>
+                        </select>
+                      ) : field === 'platnosc' ? (
+                        <select
+                          value={editOrder?.platnosc || ''}
+                          onChange={(e) => setEditOrder({ ...editOrder, platnosc: e.target.value })}
+                          className="w-full px-3 py-2 min-h-[40px] bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        >
+                          <option value="">— wybierz —</option>
+                          <option value="karta">Karta</option>
+                          <option value="gotówka">Gotówka</option>
+                        </select>
+                      ) : field === 'dataDostawy' ? (
+                        <input
+                          type="date"
+                          value={editOrder?.dataDostawy ? String(editOrder.dataDostawy).slice(0, 10) : ''}
+                          onChange={(e) => setEditOrder({ ...editOrder, dataDostawy: e.target.value })}
+                          className="w-full px-3 py-2 min-h-[40px] bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={editOrder?.[field] || ''}
+                          onChange={(e) => setEditOrder({ ...editOrder, [field]: e.target.value })}
+                          className="w-full px-3 py-2 min-h-[40px] bg-[#1a1a1a] border border-yellow-500 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="flex justify-end mt-6">
-              <button
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded mr-3"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Anuluj
-              </button>
-              <button
-                className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded font-bold"
-                onClick={handleSave}
-              >
-                Zapisz
-              </button>
+              </div>
+              {/* Footer – NA SAMYM DOLE, ŚREDNIA WYSOKOŚĆ */}
+              <div className="shrink-0 bg-[#2c2c2c] border-t border-yellow-500/40 px-3 py-2 flex justify-end gap-2">
+                <button
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 text-sm rounded"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Anuluj
+                </button>
+                <button
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-3 py-1.5 text-sm rounded font-bold"
+                  onClick={handleSave}
+                >
+                  Zapisz
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
-
       {deleteTarget && (
         <div className="fixed inset-0 z-[9999] bg-black bg-opacity-70 flex items-center justify-center">
           <div className="bg-[#2c2c2c] text-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center border border-red-500">
