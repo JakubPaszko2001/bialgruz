@@ -10,7 +10,7 @@ const Offer = () => {
       {/* ŻÓŁTE ŚWIATŁO Z LEWEJ STRONY */}
       <div className="absolute left-1/2 top-0 transform -translate-x-1/2 lg:left-0 lg:-top-1/2 w-[1500px] h-[1500px] bg-yellow-400 opacity-5 blur-[200px] rounded-full pointer-events-none z-0" />
 
-      <h1 className='text-center text-white text-3xl font-bold pt-8 relative z-10'>Nasza oferta</h1>
+      <h2 className='text-center text-white text-3xl font-bold pt-8 relative z-10'>Nasza oferta</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 max-w-[1280px] mx-auto relative z-10">
         {[{
@@ -62,7 +62,7 @@ const Offer = () => {
             <div className='w-full rounded-full overflow-hidden outline outline-[3px] outline-yellow-600/55 outline-offset-[13px] shadow-[0_0_0_16px_rgba(255,255,0,0.08)]'>
               <img src={item.img} alt={item.title} loading="lazy" className='w-full h-auto' />
             </div>
-            <h2 className='mt-12 text-[#FFD700] font-bold text-2xl text-center'>{item.title}</h2>
+            <p className='mt-12 text-[#FFD700] font-bold text-2xl text-center'>{item.title}</p>
             {item.clean && <p className='mt-8 text-white'><span className='font-bold text-xs'>GRUZ CZYSTY:</span> {item.clean}</p>}
             {item.mixed && <p className='text-white'><span className='font-bold text-xs'>ODPAD ZMIESZANY:</span> {item.mixed}</p>}
             {(item.clean || item.mixed) && (

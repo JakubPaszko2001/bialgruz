@@ -4,7 +4,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 const Contact = () => {
   return (
     <div id='contact' className="bg-black text-white py-12 px-[20px] w-full overflow-x-hidden">
-      <h1 className="text-3xl font-bold text-center mb-12">Kontakt</h1>
+      <h2 className="text-3xl font-bold text-center mb-12">Kontakt</h2>
       <div className="flex flex-col sm:flex-row items-start sm:items-center lg:items-start justify-center gap-12 max-w-[1280px] mx-auto">        
         {/* Dane kontaktowe */}
         <div className="flex-1 space-y-6 max-w-md">
@@ -12,7 +12,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaPhoneAlt className="text-white text-lg mt-1" />
             <div>
-              <h2 className="font-bold text-lg">Telefon</h2>
+              <p className="font-bold text-lg">Telefon</p>
               <p>+ 48 799 091 000</p>
               <p>+ 48 799 092 000</p>
               <p>+ 48 799 093 000</p>
@@ -27,7 +27,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaEnvelope className="text-white text-lg mt-1" />
             <div>
-              <h2 className="font-bold text-lg">Email</h2>
+              <p className="font-bold text-lg">Email</p>
               <p>biuro@bialgruz.pl</p>
               <p className="text-sm text-gray-300">Odpowiadamy w ciągu 12h</p>
             </div>
@@ -37,7 +37,7 @@ const Contact = () => {
           <div className="flex items-start space-x-4">
             <FaMapMarkerAlt className="text-white text-lg mt-1" />
             <div>
-              <h2 className="font-bold text-lg">Adres</h2>
+              <p className="font-bold text-lg">Adres</p>
               <p>Porosły-Kolonia 12M</p>
               <p>16-070 Choroszcz</p>
             </div>

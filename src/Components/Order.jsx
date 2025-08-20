@@ -297,7 +297,7 @@ const Order = () => {
 
   return (
     <div id="order" className="w-full bg-[#222222] px-[20px] pb-12 relative">
-      <h1 className="text-3xl font-bold text-white text-center py-12">Złóż zamówienie</h1>
+      <h2 className="text-3xl font-bold text-white text-center py-12">Złóż zamówienie</h2>
       <div className="bg-[#1E1D1C] text-white max-w-4xl mx-auto p-6 rounded-xl shadow">
         <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-5">
 

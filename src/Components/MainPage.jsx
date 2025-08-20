@@ -25,10 +25,10 @@ const MainPage = () => {
       <p className='text-white text-center mt-8 z-10'>lub zadzwoń</p>
 
       <div className="mt-8 text-center text-5xl md:text-5xl font-extrabold uppercase text-gray-400 tracking-wide z-10">
-        <h2>799 091 000</h2>
-        <h2>799 092 000</h2>
-        <h2>799 093 000</h2>
-        <h2 className="text-sm">BDO: 000672099</h2>
+        <p>799 091 000</p>
+        <p>799 092 000</p>
+        <p>799 093 000</p>
+        <p className="text-sm">BDO: 000672099</p>
       </div>
     </div>
   )

@@ -4,7 +4,7 @@ import Slogan from '../Assets/BialgruzSlogan.webp'
 const Footer = () => {
   return (
      <footer className="bg-[#111111] text-white px-6 py-10 text-center border-t-2 border-yellow-500">
-      <h1 className="text-yellow-400 text-2xl font-bold">BIALGRUZ.PL</h1>
+      <p className="text-yellow-400 text-2xl font-bold">BIALGRUZ.PL</p>
       <p className="mt-4 text-gray-300">
         Zajmujemy się profesjonalnym wywozem gruzu i odpadów budowlanych.
         Oferujemy BIG-BAGi 1m³ oraz kontenery 7m³.
