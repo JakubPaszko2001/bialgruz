@@ -1,7 +1,15 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # 1. Przekierowanie na HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # 2. Ignoruj index.html jeśli już na niego wchodzimy
   RewriteRule ^index\.html$ - [L]
+
+  # 3. Jeśli plik lub folder nie istnieje, skieruj na index.html
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
