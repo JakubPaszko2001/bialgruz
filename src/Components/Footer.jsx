@@ -7,7 +7,7 @@ const Footer = () => {
       <p className="text-yellow-400 text-2xl font-bold">BIALGRUZ.PL</p>
       <p className="mt-4 text-gray-300">
         Zajmujemy się profesjonalnym wywozem gruzu i odpadów budowlanych.
-        Oferujemy BIG-BAGi 1m³ oraz kontenery 7m³.
+        Oferujemy BIG-BAGi 1m³ oraz kontenerów (5m³ i 7 m³).
       </p>
       <hr className="border-t border-gray-600 my-6 w-2/3 mx-auto" />
       <p className="text-sm text-gray-400">© 2025 BIAL-GRUZ. Wszelkie prawa zastrzeżone.</p>

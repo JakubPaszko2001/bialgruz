@@ -99,7 +99,7 @@ const Offer = () => {
                     <p className='text-gray-500 text-[10px] mt-2 italic'>(VAT 8% wliczony)</p>
                   </div>
                 ) : (
-                  <p className="text-gray-400 text-sm italic">Cena ustalana indywidualnie</p>
+                  <p className="text-gray-400 text-sm italic">USŁUGA WKRÓTCE DOSTĘPNA</p>
                 )}
             </div>
 
