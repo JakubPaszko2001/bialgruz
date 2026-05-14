@@ -113,7 +113,8 @@ const Order = () => {
       setEstimatedPrice(estimated);
       setTransportError(false);
       setFormErrors((p) => {
-        const { coords, ...rest } = p;
+        const rest = { ...p };
+        delete rest.coords;
         return rest;
       });
       return;

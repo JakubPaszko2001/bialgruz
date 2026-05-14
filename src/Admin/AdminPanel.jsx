@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../Components/Supabase';
 import { FaEdit, FaTrash, FaSort, FaSortUp, FaSortDown, FaFilePdf } from 'react-icons/fa';
 
@@ -67,7 +67,7 @@ const AdminPanel = () => {
     'message', 'platnosc', 'Status'
   ];
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     const { data, error } = await supabase
       .from('Zamówienia')
       .select('*')
@@ -75,11 +75,11 @@ const AdminPanel = () => {
 
     if (!error) setOrders(data || []);
     else console.error('Błąd pobierania danych:', error.message);
-  };
+  }, []);
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [fetchOrders]);
 
   const handleEdit = (order) => {
     setEditOrder({ ...order });
